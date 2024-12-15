@@ -1,3 +1,8 @@
+/* 
+   Configures ESLint to enforce coding standards and identify errors in JavaScript and React code. 
+   Includes modern ECMAScript syntax, React-specific rules, and auto-detection of the React version.
+*/
+
 import js from '@eslint/js'
 import globals from 'globals'
 import react from 'eslint-plugin-react'

@@ -1,3 +1,9 @@
+/* 
+   Defines the styles for the sidebar component of the GenieAI application.
+   Provides layout, typography, and animations for elements like the menu, new chat button, 
+   and recent activity list to enhance user navigation and interactivity.
+*/
+
 .sidebar{
     min-height: 100vh;
     display: inline-flex;
