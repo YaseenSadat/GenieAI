@@ -1,6 +1,7 @@
 # 🚀 **GenieAI**  
 
 **Created by:** [Yaseen Sadat](https://github.com/YaseenSadat)  
+![Yaseen Sadat](src/assets/logo.jpg)  
 ![Yaseen Sadat](src/assets/genieaihome.png)  
 
 ---
