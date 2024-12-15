@@ -1,7 +1,7 @@
 # 🚀 **GenieAI**  
 
 **Created by:** [Yaseen Sadat](https://github.com/YaseenSadat)  
-![Yaseen Sadat](./assets/yaseen_sadat.jpg)  
+![Yaseen Sadat](src/assets/genieaihome.png)  
 
 ---
 
@@ -37,14 +37,14 @@ Check out GenieAI in action here: [👉 **YouTube Demo**](https://youtu.be/CF5FS
 - **CSS** 🎨 – Styling for the UI and responsive design.  
 - **Vite** ⚡ – Fast build tool and development server for React.  
 - **OpenAI API** 🤖 – AI model integration for generating responses.
-- 
+
 ---
 
 ## 📫 **Connect with Me**  
 
 If you have any questions, feedback, or want to collaborate:  
 - GitHub: [Yaseen Sadat](https://github.com/YaseenSadat)  
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/yaseensadat/)
+- LinkedIn: [My LinkedIn Profile](https://www.linkedin.com/in/yaseensadat/)
 
 ---
 
