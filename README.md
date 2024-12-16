@@ -31,7 +31,8 @@ Check out GenieAI in action here: [👉 **YouTube Demo**](https://youtu.be/CF5FS
 
 ## 💻 **Technologies Used**  
 
-- **React** ⚛️ – Frontend library for building user interfaces.  
+- **React** ⚛️ – Frontend library for building user interfaces.
+- **React Native 🌐** – Cross-platform framework for building mobile and web user interfaces.
 - **Node.js** 🟢 – Backend JavaScript runtime environment.  
 - **JavaScript** ✨ – Core language for application logic.  
 - **HTML** 📝 – Structure for the web application.  
