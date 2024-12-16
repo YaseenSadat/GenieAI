@@ -1,107 +1,141 @@
 /*
-   This file provides the global state management for the GenieAI application using React's Context API. 
-   It manages user input, prompts, API responses, and loading states, making them accessible across components.
+    context.jsx
+    ============
+    This file creates a Context for managing the global state of the GenieAI application. 
+    It provides a `ContextProvider` component that encapsulates the app's state logic and 
+    makes it available to all child components.
+
+    Key Features:
+    - Manages user input, recent prompts, loading state, and AI-generated responses.
+    - Provides utility functions to send prompts to the OpenAI API and handle responses.
+    - Dynamically formats and animates the AI-generated responses for better presentation.
+
+    Dependencies:
+    - React's Context API for global state management.
+    - `runChat` function from OpenAI configuration for sending user prompts to the AI.
 */
 
-import { createContext, useState } from "react";
-import runChat from "../config/openai";
+import React, { createContext, useState } from "react";
+import runChat from "../config/openai"; // Import OpenAI API integration
 
-// Create the Context to share global state across components
+// Create and export the Context to make it accessible across components
 export const Context = createContext();
 
-const ContextProvider = (props) => {
-    // State for managing user input in the search box
+/**
+ * ContextProvider Component
+ * =========================
+ * This component serves as the global state provider for the GenieAI application.
+ * It maintains various states such as user input, previous prompts, and the result 
+ * returned from the OpenAI API. The context value is shared with all children components.
+ * 
+ * @param {object} children - React components wrapped within the provider.
+ * @returns {JSX.Element} - Context.Provider wrapping the application.
+ */
+const ContextProvider = ({ children }) => {
+    // State for the current user input
     const [input, setInput] = useState("");
 
-    // State for storing the most recent user prompt
+    // State for storing the most recent prompt sent
     const [recentPrompt, setRecentPrompt] = useState("");
 
-    // State for tracking a history of user prompts
+    // State for storing a list of previous prompts
     const [prevPrompts, setPrevPrompts] = useState([]);
 
-    // State for toggling the visibility of results
+    // State for toggling the result display
     const [showResult, setShowResult] = useState(false);
 
-    // State to indicate if the AI response is being loaded
+    // State to indicate loading while waiting for the API response
     const [loading, setLoading] = useState(false);
 
-    // State for storing the data returned by the OpenAI API
+    // State to store and display the formatted result data
     const [resultData, setResultData] = useState("");
 
-    // Appends words with a delay to create a typing animation effect
+    /**
+     * Delays appending a word to the resultData state for dynamic typing animation.
+     * @param {number} index - Index of the word in the response array.
+     * @param {string} nextWord - The word to append after the delay.
+     */
     const delayPara = (index, nextWord) => {
         setTimeout(() => {
-            setResultData((prev) => prev + nextWord);
-        }, 75 * index);
+            setResultData((prev) => prev + nextWord); // Append the word to the previous state
+        }, 75 * index); // Delay each word by 75ms per index
     };
 
-    // Resets the state for starting a new chat
+    /**
+     * Resets the application to start a new chat session.
+     * Clears loading state and hides any existing results.
+     */
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
     };
 
-    // Handles sending a prompt to the OpenAI API and processing the response
+    /**
+     * Handles sending the user's prompt to the OpenAI API.
+     * It updates states for loading, result display, and manages the response formatting.
+     * 
+     * @param {string} prompt - The user's input prompt (optional).
+     */
     const onSent = async (prompt) => {
-        setResultData(""); // Clear the previous result
-        setLoading(true);  // Set loading state to true
-        setShowResult(true); // Display the result area
+        setResultData("");       // Clear previous result data
+        setLoading(true);        // Indicate loading state
+        setShowResult(true);     // Show the result container
 
         let response;
 
-        // Check if a prompt is provided or use the current input
-        if (prompt !== undefined) {
-            response = await runChat(prompt); // Fetch the AI's response
-            setRecentPrompt(prompt); // Save the recent prompt
+        // Check if a prompt is passed or use the current input state
+        if (prompt) {
+            response = await runChat(prompt);
+            setRecentPrompt(prompt);
         } else {
-            setPrevPrompts((prev) => [...prev, input]); // Add input to the prompt history
-            setRecentPrompt(input); // Save the input as the recent prompt
-            response = await runChat(input); // Fetch the AI's response
+            setPrevPrompts((prev) => [...prev, input]); // Add the input to previous prompts
+            setRecentPrompt(input);
+            response = await runChat(input);
         }
 
-        // Process the response to format bold text and line breaks
-        let responseArray = response.split("**");
-        let newResponse = "";
+        // Formatting the response: Adding bold and line breaks for better display
+        const responseArray = response.split("**");
+        let formattedResponse = "";
+
         for (let i = 0; i < responseArray.length; i++) {
-            if (i === 0 || i % 2 !== 1) {
-                newResponse += responseArray[i];
+            if (i % 2 === 1) {
+                formattedResponse += `<b>${responseArray[i]}</b>`; // Bold words between **
             } else {
-                newResponse += "<b>" + responseArray[i] + "</b>";
+                formattedResponse += responseArray[i];
             }
         }
 
-        // Replace single asterisks with line breaks
-        let newResponse2 = newResponse.split("*").join("</br>");
-        let newResponseArray = newResponse2.split(" ");
-
-        // Animate the response word by word
+        // Split the response into words and animate their appearance
+        const newResponseArray = formattedResponse.split("*").join("</br>").split(" ");
         for (let i = 0; i < newResponseArray.length; i++) {
-            const nextWord = newResponseArray[i];
-            delayPara(i, nextWord + " ");
+            delayPara(i, newResponseArray[i] + " ");
         }
 
-        setLoading(false); // Set loading state to false
+        setLoading(false); // End the loading state
         setInput("");      // Clear the input field
     };
 
-    // Context value to provide states and functions to child components
-    const contextValue = {
-        prevPrompts,
-        setPrevPrompts,
-        onSent,
-        setRecentPrompt,
-        recentPrompt,
-        showResult,
-        loading,
-        resultData,
-        input,
-        setInput,
-        newChat,
-    };
-
+    /**
+     * The value provided to the context consumers.
+     * Contains the application state and utility functions.
+     */
     return (
-        <Context.Provider value={contextValue}>
-            {props.children} {/* Renders child components that consume this context */}
+        <Context.Provider
+            value={{
+                input,
+                setInput,
+                prevPrompts,
+                setPrevPrompts,
+                recentPrompt,
+                setRecentPrompt,
+                showResult,
+                loading,
+                resultData,
+                onSent,
+                newChat,
+            }}
+        >
+            {children}
         </Context.Provider>
     );
 };
